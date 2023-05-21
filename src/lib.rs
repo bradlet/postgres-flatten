@@ -1,3 +1,10 @@
+struct Cat {
+    name: String,
+    age: u8,
+    color: u8
+}
+
+
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
