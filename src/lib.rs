@@ -1,21 +1,29 @@
-struct Cat {
-    name: String,
-    age: u8,
-    color: u8
+use proc_macro::TokenStream;
+use quote::quote;
+use syn;
+
+// pub trait ToFlattenedSql {
+//     fn into_flattened_row();
+// }
+
+fn impl_to_flattened_sql(input: &syn::DeriveInput) -> TokenStream {
+    let name = &input.ident;
+
+    // quote! macro builds the Rust output code with templating support.
+    let gen = quote! {
+        impl ToFlattenedSql for #name {
+            fn into_flattened_row() {
+                println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
+            }
+        }
+    };
+
+    gen.into()
 }
 
+#[proc_macro_derive(ToFlattenedSql)]
+pub fn to_flattened_sql_derive(input: TokenStream) -> TokenStream {
+    let ast: syn::DeriveInput = syn::parse(input).unwrap();
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+    impl_to_flattened_sql(&ast)
 }
