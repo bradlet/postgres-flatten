@@ -1,12 +1,14 @@
 [package]
 name = "postgres-flatten"
 version = "0.1.0"
+authors = ["Bradley Thompson <bradlet2@pdx.edu>"]
+description = "derive(ToFlattenedSql) | derive(FromFlattenedSql)"
 edition = "2021"
-
-[lib]
-proc-macro = true
+keywords = ["derive", "flatten", "flatten-postgres"]
+license = "MIT"
 
 [dependencies]
-syn = "2.0"
-quote = "1.0"
-postgres = "0.19"
+postgres-flatten-impl = { path = "impl" }
+
+[workspace]
+members = ["impl"]

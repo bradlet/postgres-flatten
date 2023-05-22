@@ -1,29 +1,12 @@
-use proc_macro::TokenStream;
-use quote::quote;
-use syn;
+// Copyright © 2023 Bradley Thompson
+// [This program is licensed under the "MIT License"]
+// Please see the file LICENSE in the source
+// distribution of this software for license terms.
 
-// pub trait ToFlattenedSql {
-//     fn into_flattened_row();
-// }
+//! # postgres-flatten
+//! A proc macro lib crate which provides the `ToFlattenedSql` and `FromFlattenedSql` traits,
+//! as well as a derive macro to implement these traits on any type.
 
-fn impl_to_flattened_sql(input: &syn::DeriveInput) -> TokenStream {
-    let name = &input.ident;
+mod into_flattened;
 
-    // quote! macro builds the Rust output code with templating support.
-    let gen = quote! {
-        impl ToFlattenedSql for #name {
-            fn into_flattened_row() {
-                println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
-            }
-        }
-    };
-
-    gen.into()
-}
-
-#[proc_macro_derive(ToFlattenedSql)]
-pub fn to_flattened_sql_derive(input: TokenStream) -> TokenStream {
-    let ast: syn::DeriveInput = syn::parse(input).unwrap();
-
-    impl_to_flattened_sql(&ast)
-}
+pub use postgres_flatten_impl::*;

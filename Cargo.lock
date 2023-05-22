@@ -313,6 +313,13 @@ dependencies = [
 name = "postgres-flatten"
 version = "0.1.0"
 dependencies = [
+ "postgres-flatten-impl",
+]
+
+[[package]]
+name = "postgres-flatten-impl"
+version = "0.1.0"
+dependencies = [
  "postgres",
  "quote",
  "syn",
