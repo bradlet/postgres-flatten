@@ -12,7 +12,7 @@ fn impl_to_flattened_sql(input: &syn::DeriveInput) -> TokenStream {
 
     // quote! macro builds the Rust output code with templating support.
     let gen = quote! {
-        impl ToFlattenedRow for #name {
+        impl ToFlattenedSql for #name {
             fn into_flattened_row() {
                 println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
             }
