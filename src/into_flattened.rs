@@ -1,6 +1,6 @@
 //! into_flattened.rs
 //! Author: bradlet
 
-pub trait ToFlattenedSql {
+pub trait ToFlattenedRow {
     fn into_flattened_row();
 }
