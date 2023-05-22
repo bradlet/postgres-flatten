@@ -7,6 +7,6 @@
 //! A proc macro lib crate which provides the `ToFlattenedSql` and `FromFlattenedSql` traits,
 //! as well as a derive macro to implement these traits on any type.
 
-pub mod into_flattened;
+pub mod flattened;
 
 pub use postgres_flatten_impl::*;
