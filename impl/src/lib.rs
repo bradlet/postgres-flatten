@@ -1,11 +1,8 @@
 //! into_flattened.rs
 //! Author: bradlet
 
-extern crate proc_macro;
-
 use proc_macro::TokenStream;
 use quote::quote;
-use syn;
 
 fn impl_to_flattened_sql(input: &syn::DeriveInput) -> TokenStream {
     let name = &input.ident;
@@ -15,6 +12,9 @@ fn impl_to_flattened_sql(input: &syn::DeriveInput) -> TokenStream {
         impl ToFlattenedSql for #name {
             fn into_flattened_row() {
                 println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
+                for attr in &input.attrs {
+                    println!("Attr: {:?}", stringify!(attr))
+                }
             }
         }
     };
