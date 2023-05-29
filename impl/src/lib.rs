@@ -7,7 +7,7 @@ extern crate proc_macro;
 
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{Data::Struct, DeriveInput, Field, Fields::Named};
+use syn::{parse_macro_input, Data::Struct, DeriveInput, Fields::Named};
 
 fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
@@ -41,7 +41,7 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
 
 #[proc_macro_derive(ToFlattenedSql)]
 pub fn to_flattened_sql_derive(input: TokenStream) -> TokenStream {
-    let ast: syn::DeriveInput = syn::parse(input).unwrap();
+    let ast = parse_macro_input!(input as DeriveInput);
 
     impl_to_flattened_sql(&ast)
 }
