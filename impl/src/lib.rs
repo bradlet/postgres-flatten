@@ -1,20 +1,37 @@
 //! into_flattened.rs
 //! Author: bradlet
 
+// Set max recursion limit (https://github.com/sfackler/rust-postgres/blob/master/postgres-derive/src/lib.rs)
+#![recursion_limit = "256"]
+extern crate proc_macro;
+
 use proc_macro::TokenStream;
 use quote::quote;
+use syn::{Data::Struct, DeriveInput, Field, Fields::Named};
 
-fn impl_to_flattened_sql(input: &syn::DeriveInput) -> TokenStream {
+fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
+    let field_names = if let Struct(derived) = &input.data {
+        if let Named(fs) = &derived.fields {
+            let fields = fs
+                .named
+                .iter()
+                .map(|f| f.ident.as_ref().unwrap().to_string())
+                .collect::<Vec<String>>();
+            fields.join(", ")
+        } else {
+            String::from(" ")
+        }
+    } else {
+        String::from(" ")
+    };
 
     // quote! macro builds the Rust output code with templating support.
     let gen = quote! {
         impl ToFlattenedSql for #name {
             fn into_flattened_row() {
                 println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
-                for attr in &input.attrs {
-                    println!("Attr: {:?}", stringify!(attr))
-                }
+                println!("Are these your field names? {}", stringify!(#field_names));
             }
         }
     };
