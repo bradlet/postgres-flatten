@@ -31,7 +31,7 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
         impl ToFlattenedSql for #name {
             fn into_flattened_row() {
                 println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
-                println!("Are these your field names? {}", stringify!(#field_names));
+                println!("Are these your field names? {}", #field_names);
             }
         }
     };
