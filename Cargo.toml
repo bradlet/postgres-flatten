@@ -7,8 +7,12 @@ edition = "2021"
 keywords = ["derive", "flatten", "flatten-postgres"]
 license = "MIT"
 
-[dependencies]
-postgres-flatten-impl = { version = "=0.1.0", path = "impl" }
+[dependencies.postgres-flatten-impl]
+version = "=0.1.0"
+path = "impl"
+
+[dev-dependencies.trybuild]
+version = "1.0"
 
 [workspace]
 members = ["impl"]
