@@ -13,13 +13,9 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
     let field_names = if let Struct(derived) = &input.data {
         if let Named(fs) = &derived.fields {
-            fs
-                .named
-                .iter()
-                .map(|f| f.ident.as_ref().unwrap())
-                .collect()
+            fs.named.iter().map(|f| f.ident.as_ref().unwrap()).collect()
         } else {
-           vec![] 
+            vec![]
         }
     } else {
         vec![]
@@ -30,7 +26,7 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
         impl ToFlattenedSql for #name {
             fn into_flattened_row() {
                 println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
-                println!("Are these your field names? stringify! #(#field_names)*");
+                #(println!("Field: {}", #field_names);)*
             }
         }
     };
