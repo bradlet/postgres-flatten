@@ -13,17 +13,16 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
     let field_names = if let Struct(derived) = &input.data {
         if let Named(fs) = &derived.fields {
-            let fields = fs
+            fs
                 .named
                 .iter()
-                .map(|f| f.ident.as_ref().unwrap().to_string())
-                .collect::<Vec<String>>();
-            fields.join(", ")
+                .map(|f| f.ident.as_ref().unwrap())
+                .collect()
         } else {
-            String::from(" ")
+           vec![] 
         }
     } else {
-        String::from(" ")
+        vec![]
     };
 
     // quote! macro builds the Rust output code with templating support.
@@ -31,7 +30,7 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
         impl ToFlattenedSql for #name {
             fn into_flattened_row() {
                 println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
-                println!("Are these your field names? {}", #field_names);
+                println!("Are these your field names? stringify! #(#field_names)*");
             }
         }
     };
