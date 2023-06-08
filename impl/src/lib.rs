@@ -13,7 +13,18 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
     let field_names = if let Struct(derived) = &input.data {
         if let Named(fs) = &derived.fields {
+            // Note to self: f has `ty` type field.
             fs.named.iter().map(|f| f.ident.as_ref().unwrap()).collect()
+        } else {
+            vec![]
+        }
+    } else {
+        vec![]
+    };
+    // TODO: Figure out how to pull this in one operation with field_names or use a macro_rules! macro
+    let field_types = if let Struct(derived) = &input.data {
+        if let Named(fs) = &derived.fields {
+            fs.named.iter().map(|f| &f.ty).collect()
         } else {
             vec![]
         }
@@ -26,7 +37,7 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
         impl ToFlattenedSql for #name {
             fn into_flattened_row() {
                 println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
-                #(println!("Field: {}", stringify!(#field_names)));*
+                #(println!("Field: {} [type = {}]", stringify!(#field_names), stringify!(#field_types)));*
             }
         }
     };
