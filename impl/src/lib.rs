@@ -39,7 +39,7 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
                 #(println!("Field: {} [type = {}]", stringify!(#field_names), stringify!(#field_types)));*
             }
 
-            fn default() -> #name {
+            fn default() -> Self {
                 Self {
                     #(#field_names : String::from("test")),*
                 }
