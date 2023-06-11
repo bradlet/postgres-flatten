@@ -22,7 +22,7 @@ mod runtime_tests {
 
     #[test]
     #[should_panic]
-    #[ignore] // Note: This integration test requires a local postgres instance. Uncomment to run when an instance is running.
+    // #[ignore] // Note: This integration test requires a local postgres instance. Uncomment to run when an instance is running.
     fn test_panics_on_type_mismatch() {
         let mut client = Client::connect(
             "host=localhost dbname=postgres port=32768 user=brad password=password",
