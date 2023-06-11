@@ -38,6 +38,12 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
                 println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
                 #(println!("Field: {} [type = {}]", stringify!(#field_names), stringify!(#field_types)));*
             }
+
+            fn default(): #name {
+                #name {
+                    #(#field_names = String::from("test")),*
+                }
+            }
         }
     };
 
