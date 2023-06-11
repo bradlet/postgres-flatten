@@ -39,11 +39,11 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
                 #(println!("Field: {} [type = {}]", stringify!(#field_names), stringify!(#field_types)));*
             }
 
-            fn default() -> Self {
-                Self {
-                    #(#field_names : String::from("test")),*
-                }
-            }
+            // fn default() -> Self {
+            //     Self {
+            //         #(#field_names : String::from("test")),*
+            //     }
+            // }
         }
     };
 
@@ -74,7 +74,7 @@ fn impl_from_flattened_sql(input: &DeriveInput) -> TokenStream {
 
             fn from_flattened_row(row: postgres::Row) -> Self {
                 Self {
-                    #(#field_names : String::from("test")),*
+                    #(#field_names : row.get(stringify!(#field_names))),*
                 }
             }
         }

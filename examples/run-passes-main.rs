@@ -5,9 +5,9 @@ use postgres_flatten::{
 #[derive(ToFlattenedSql, FromFlattenedSql)]
 struct Cat {
     name: String,
-    // age: u8,
-    // color: u8,
-    // friendliness: i8,
+    age: i8,
+    color: i8,
+    friendliness: i8,
 }
 
 fn main() {}
