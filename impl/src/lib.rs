@@ -13,7 +13,6 @@ fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
     let field_names = if let Struct(derived) = &input.data {
         if let Named(fs) = &derived.fields {
-            // Note to self: f has `ty` type field.
             fs.named.iter().map(|f| f.ident.as_ref().unwrap()).collect()
         } else {
             vec![]
