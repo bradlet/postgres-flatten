@@ -1,7 +1,7 @@
 //! into_flattened.rs
 //! Author: bradlet
 
-// use postgres::Row;
+use postgres::Row;
 
 pub trait ToFlattenedSql {
     fn into_flattened_row();
@@ -10,5 +10,5 @@ pub trait ToFlattenedSql {
 }
 
 pub trait FromFlattenedSql {
-    fn from_flattened_row() -> Self;
+    fn from_flattened_row(row: Row) -> Self;
 }
