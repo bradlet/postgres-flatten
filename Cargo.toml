@@ -11,6 +11,9 @@ license = "MIT"
 version = "=0.1.0"
 path = "impl"
 
+[dependencies.postgres]
+version = "0.19"
+
 [dev-dependencies.trybuild]
 version = "1.0"
 

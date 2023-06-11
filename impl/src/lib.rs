@@ -56,3 +56,37 @@ pub fn to_flattened_sql_derive(input: TokenStream) -> TokenStream {
 
     impl_to_flattened_sql(&ast)
 }
+
+fn impl_from_flattened_sql(input: &DeriveInput) -> TokenStream {
+    let name = &input.ident;
+    let field_names = if let Struct(derived) = &input.data {
+        if let Named(fs) = &derived.fields {
+            fs.named.iter().map(|f| f.ident.as_ref().unwrap()).collect()
+        } else {
+            vec![]
+        }
+    } else {
+        vec![]
+    };
+
+    let gen = quote! {
+        impl FromFlattenedSql for #name {
+            fn from_flattened_row() -> Self {
+                Self {
+                    #(#field_names : String::from("test")),*
+                }
+            }
+        }
+    };
+
+    gen.into()
+}
+
+#[proc_macro_derive(FromFlattenedSql)]
+pub fn from_flattened_sql_derive(input: TokenStream) -> TokenStream {
+    let ast = parse_macro_input!(input as DeriveInput);
+
+    let stream = impl_from_flattened_sql(&ast);
+    println!("{}", stream);
+    stream
+}
