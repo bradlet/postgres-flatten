@@ -2,8 +2,9 @@
 fn test_proc_macro_compilation() {
     let t = trybuild::TestCases::new();
     // Re-using example for base test-case:
-    t.pass("examples/run-passes.rs");
+    t.pass("examples/example.rs");
     // All other UI tests:
+    t.pass("tests/ui/run-passes-nested-struct.rs");
     t.compile_fail("tests/ui/compile-fails-unsupported-type.rs");
 }
 

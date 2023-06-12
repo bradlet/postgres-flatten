@@ -11,6 +11,15 @@ use syn::{parse_macro_input, Data::Struct, DeriveInput, Fields::Named};
 
 fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
+
+    if let Struct(derived) = &input.data {
+        if let Named(fs) = &derived.fields {
+            fs.named.iter().for_each(|f| {
+                eprintln!("Type: {:?}", f.ty);
+            })
+        }
+    };
+
     let field_names = if let Struct(derived) = &input.data {
         if let Named(fs) = &derived.fields {
             fs.named.iter().map(|f| f.ident.as_ref().unwrap()).collect()
@@ -60,7 +69,7 @@ pub fn to_flattened_sql_derive(input: TokenStream) -> TokenStream {
 /*
 Plan:
 1. Get field name and type.
-2. If type is struct,
+2. If type is Path, somehow get Struct type info???
  */
 fn impl_from_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
