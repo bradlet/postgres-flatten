@@ -69,7 +69,7 @@ fn impl_from_flattened_sql(input: &DeriveInput) -> TokenStream {
             fs.named
                 .iter()
                 .map(|f| {
-                    println!("Type: {:?}", f.ty);
+                    eprintln!("Type: {:?}", f.ty);
                     f.ident.as_ref().unwrap()
                 })
                 .collect()
