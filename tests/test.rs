@@ -16,12 +16,10 @@ mod runtime_tests {
     struct Cat {
         name: String,
         age: i8,
-        color: i8,
-        friendliness: i8,
     }
 
     #[test]
-    #[should_panic]
+    #[should_panic(expected = "Type mismatch: cannot convert between the Rust type `i8` and the Postgres type `int4`")]
     // #[ignore] // Note: This integration test requires a local postgres instance. Uncomment to run when an instance is running.
     fn test_panics_on_type_mismatch() {
         let mut client = Client::connect(

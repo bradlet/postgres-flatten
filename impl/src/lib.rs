@@ -73,7 +73,11 @@ fn impl_from_flattened_sql(input: &DeriveInput) -> TokenStream {
         impl FromFlattenedSql for #name {
             fn from_flattened_row(row: postgres::Row) -> Self {
                 Self {
-                    #(#field_names : row.get(stringify!(#field_names))),*
+                    #(
+                        #field_names : row
+                            .try_get(stringify!(#field_names))
+                            .unwrap_or_else(|err| panic!("Type mismatch: {}", err.into_source().unwrap()))
+                    ),*
                 }
             }
         }
@@ -87,6 +91,6 @@ pub fn from_flattened_sql_derive(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
 
     let stream = impl_from_flattened_sql(&ast);
-    println!("{}", stream);
+    println!("{}", stream); // TODO: Remove (or comment out) when main impl is done.
     stream
 }
