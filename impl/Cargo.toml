@@ -13,4 +13,4 @@ postgres = "0.19"
 
 [dependencies.syn]
 version = "2.0"
-feature = ["extra-traits"]
+features = ["extra-traits"]
