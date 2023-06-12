@@ -1,0 +1,20 @@
+error[E0277]: the trait bound `u8: FromSql<'_>` is not satisfied
+ --> tests/ui/compile-fails-unsupported-type.rs:6:26
+  |
+6 | #[derive(ToFlattenedSql, FromFlattenedSql)]
+  |                          ^^^^^^^^^^^^^^^^ the trait `FromSql<'_>` is not implemented for `u8`
+  |
+  = help: the following other types implement trait `FromSql<'a>`:
+            f32
+            f64
+            i16
+            i32
+            i64
+            i8
+            u32
+note: required by a bound in `postgres::Row::try_get`
+ --> $CARGO/tokio-postgres-0.7.8/src/row.rs
+  |
+  |         T: FromSql<'a>,
+  |            ^^^^^^^^^^^ required by this bound in `Row::try_get`
+  = note: this error originates in the derive macro `FromFlattenedSql` (in Nightly builds, run with -Z macro-backtrace for more info)
