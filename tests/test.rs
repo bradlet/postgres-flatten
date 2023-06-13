@@ -4,19 +4,16 @@ fn test_proc_macro_compilation() {
     // Re-using example for base test-case:
     t.pass("examples/example.rs");
     // All other UI tests:
-    t.pass("tests/ui/run-passes-nested-struct.rs");
     t.compile_fail("tests/ui/compile-fails-unsupported-type.rs");
 }
 
 #[cfg(test)]
 mod runtime_tests {
     use postgres::{Client, NoTls};
-    use postgres_flatten::{
-        flattened::FromFlattenedSql, flattened::ToFlattenedSql, FromFlattenedSql, ToFlattenedSql,
-    };
+    use postgres_flatten::{flattened::FromFlattenedSql, FromFlattenedSql};
 
     #[allow(dead_code)]
-    #[derive(ToFlattenedSql, FromFlattenedSql)]
+    #[derive(FromFlattenedSql)]
     struct Cat {
         name: String,
         age: i8,
