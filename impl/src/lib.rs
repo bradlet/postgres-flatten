@@ -6,8 +6,7 @@
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
-use quote::quote;
-use syn::{parse_macro_input, Data::Struct, DeriveInput, Fields::Named};
+use syn::{parse_macro_input, DeriveInput};
 
 mod impl_flattenable;
 mod impl_from_flattened_sql;
