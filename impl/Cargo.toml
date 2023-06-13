@@ -10,6 +10,7 @@ proc-macro = true
 quote = "1.0"
 proc-macro2 = "1.0"
 postgres = "0.19"
+itertools = "0.10.5"
 
 [dependencies.syn]
 version = "2.0"
