@@ -25,7 +25,7 @@ pub fn from_flattened_sql(input: &DeriveInput) -> TokenStream {
 
     let gen = quote! {
         impl FromFlattenedSql for #name {
-            fn from_flattened_row(row: postgres::Row) -> Self {
+            fn from_flattened_row(row: &postgres::Row) -> Self {
                 Self {
                     #(
                         #field_names : row

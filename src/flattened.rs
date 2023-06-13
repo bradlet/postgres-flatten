@@ -6,7 +6,7 @@ pub trait ToFlattenedSql {
 }
 
 pub trait FromFlattenedSql {
-    fn from_flattened_row(row: postgres::Row) -> Self;
+    fn from_flattened_row(row: &postgres::Row) -> Self;
 }
 
 pub trait Flattenable {

@@ -31,7 +31,7 @@ mod runtime_tests {
         )
         .unwrap();
         for row in client.query("SELECT * FROM cats;", &[]).unwrap() {
-            let _cat = Cat::from_flattened_row(row);
+            let _cat = Cat::from_flattened_row(&row);
         }
     }
 }
