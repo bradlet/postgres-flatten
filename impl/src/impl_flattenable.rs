@@ -1,3 +1,4 @@
+//! Note: Leaving this to show the issue with my plan of making a recursive proc macro.
 use itertools::{Either, Itertools};
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
@@ -34,6 +35,7 @@ pub fn flatten(input: &DeriveInput) -> TokenStream {
 
     // Any fields that need to be flattened will be appended to the fields that
     // don't need to be flattened. This is not a very efficient macro!
+    // e.g. vec![field1, field2].append(field3.flatten()).append(field4.flatten())
     let gen = quote! {
         impl Flattenable for #name {
             fn flatten() -> Vec::<syn::Field> {
