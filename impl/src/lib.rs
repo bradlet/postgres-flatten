@@ -9,16 +9,23 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, Data::Struct, DeriveInput, Fields::Named};
 
+mod flattenable_impl;
+
+/* Flattenable */
+
+/// Declare the recursive `Flattenable` derive macro, as well as the `flattenable`
+/// helper attribute which is used to mark member structs that should be flattened.
+#[proc_macro_derive(Flattenable, attributes(flattenable))]
+pub fn flatten_derive(input: TokenStream) -> TokenStream {
+    let ast = parse_macro_input!(input as DeriveInput);
+
+    flattenable_impl::flatten(&ast)
+}
+
+/* ToFlattenedSql */
+
 fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
-
-    if let Struct(derived) = &input.data {
-        if let Named(fs) = &derived.fields {
-            fs.named.iter().for_each(|f| {
-                eprintln!("Type: {:?}", f.ty);
-            })
-        }
-    };
 
     let field_names = if let Struct(derived) = &input.data {
         if let Named(fs) = &derived.fields {
@@ -66,10 +73,15 @@ pub fn to_flattened_sql_derive(input: TokenStream) -> TokenStream {
     impl_to_flattened_sql(&ast)
 }
 
+/* FromFlattenedSql */
+
 /*
 Plan:
 1. Get field name and type.
-2. If type is Path, somehow get Struct type info???
+2. If type is Path and can verify that path is a struct type, require path derives FlattenNested.
+3. Call FlattenNested on type.
+    a. For each field in nested, if struct, require FlattenNested and continue recursion.
+    b. If not struct, return the type.
  */
 fn impl_from_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
