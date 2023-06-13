@@ -9,9 +9,9 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, Data::Struct, DeriveInput, Fields::Named};
 
-mod flattenable_impl;
-
-/* Flattenable */
+mod impl_flattenable;
+mod impl_from_flattened_sql;
+mod impl_to_flattened_sql;
 
 /// Declare the recursive `Flattenable` derive macro, as well as the `flattenable`
 /// helper attribute which is used to mark member structs that should be flattened.
@@ -19,110 +19,26 @@ mod flattenable_impl;
 pub fn flatten_derive(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
 
-    flattenable_impl::flatten(&ast)
+    impl_flattenable::flatten(&ast)
 }
 
-/* ToFlattenedSql */
-
-fn impl_to_flattened_sql(input: &DeriveInput) -> TokenStream {
-    let name = &input.ident;
-
-    let field_names = if let Struct(derived) = &input.data {
-        if let Named(fs) = &derived.fields {
-            fs.named.iter().map(|f| f.ident.as_ref().unwrap()).collect()
-        } else {
-            vec![]
-        }
-    } else {
-        vec![]
-    };
-    // TODO: Figure out how to pull this in one operation with field_names or use a macro_rules! macro
-    let field_types = if let Struct(derived) = &input.data {
-        if let Named(fs) = &derived.fields {
-            fs.named.iter().map(|f| &f.ty).collect()
-        } else {
-            vec![]
-        }
-    } else {
-        vec![]
-    };
-
-    // quote! macro builds the Rust output code with templating support.
-    let gen = quote! {
-        impl ToFlattenedSql for #name {
-            fn into_flattened_row() {
-                println!("Congratulations on calling into_flattened_row() on {}!", stringify!(#name));
-                #(println!("Field: {} [type = {}]", stringify!(#field_names), stringify!(#field_types)));*
-            }
-
-            // fn default() -> Self {
-            //     Self {
-            //         #(#field_names : String::from("test")),*
-            //     }
-            // }
-        }
-    };
-
-    gen.into()
-}
-
+/// Declare `ToFlattenedSql` derive macro.
+/// Note: To simplify the MVP, not implementing this. Instead, it has some methods
+///  I used to figure out procedural macro implementation.
 #[proc_macro_derive(ToFlattenedSql)]
 pub fn to_flattened_sql_derive(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
 
-    impl_to_flattened_sql(&ast)
+    impl_to_flattened_sql::to_flattened_sql(&ast)
 }
 
-/* FromFlattenedSql */
-
-/*
-Plan:
-1. Get field name and type.
-2. If type is Path and can verify that path is a struct type, require path derives FlattenNested.
-3. Call FlattenNested on type.
-    a. For each field in nested, if struct, require FlattenNested and continue recursion.
-    b. If not struct, return the type.
- */
-fn impl_from_flattened_sql(input: &DeriveInput) -> TokenStream {
-    let name = &input.ident;
-    let field_names = if let Struct(derived) = &input.data {
-        if let Named(fs) = &derived.fields {
-            fs.named
-                .iter()
-                .map(|f| {
-                    eprintln!("Type: {:?}", f.ty);
-                    f.ident.as_ref().unwrap()
-                })
-                .collect()
-        } else {
-            vec![]
-        }
-    } else {
-        vec![]
-    };
-
-    let gen = quote! {
-        impl FromFlattenedSql for #name {
-            fn from_flattened_row(row: postgres::Row) -> Self {
-                Self {
-                    #(
-                        #field_names : row
-                            .try_get(stringify!(#field_names))
-                            .unwrap_or_else(|err| panic!("Type mismatch: {}", err.into_source().unwrap()))
-                    ),*
-                }
-            }
-        }
-    };
-
-    gen.into()
-}
-
+/// Declare the `FromFlattenedSql` derive macro, which provides a `from_flattened_row`
+/// implementation which lets clients build a strongly-typed struct from a postgres `Row`
 #[proc_macro_derive(FromFlattenedSql)]
 pub fn from_flattened_sql_derive(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
 
-    let stream = impl_from_flattened_sql(&ast);
+    let stream = impl_from_flattened_sql::from_flattened_sql(&ast);
     println!("{}", stream); // TODO: Remove (or comment out) when main impl is done.
     stream
 }
