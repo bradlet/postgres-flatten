@@ -101,7 +101,7 @@ attribute. With that, I was able to figure out how to at least create a "flatten
 method implementation which would return a vector of `Field` objects describing
 the struct. The helper attribute would not even be that bad because a desired end
 goal for the project would be to make this work with protobuf messages, and protoc
-basically be instructed to include the attribute when building out types for the
+can basically be instructed to include the attribute when building out types for the
 messages -- including the attribute for any message fields. I finished the
 implementation that is currently in `impl_flattenable.rs` when I realized that it
 required runtime execution to build out the result vector, which means it probably
