@@ -9,13 +9,7 @@ pub fn from_flattened_sql(input: &DeriveInput) -> TokenStream {
     let name = &input.ident;
     let field_names = if let Struct(derived) = &input.data {
         if let Named(fs) = &derived.fields {
-            fs.named
-                .iter()
-                .map(|f| {
-                    eprintln!("Type: {:?}", f.ty);
-                    f.ident.as_ref().unwrap()
-                })
-                .collect()
+            fs.named.iter().map(|f| f.ident.as_ref().unwrap()).collect()
         } else {
             vec![]
         }

@@ -37,7 +37,5 @@ pub fn to_flattened_sql_derive(input: TokenStream) -> TokenStream {
 pub fn from_flattened_sql_derive(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
 
-    let stream = impl_from_flattened_sql::from_flattened_sql(&ast);
-    println!("{}", stream); // TODO: Remove (or comment out) when main impl is done.
-    stream
+    impl_from_flattened_sql::from_flattened_sql(&ast)
 }

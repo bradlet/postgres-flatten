@@ -15,7 +15,6 @@ pub fn flatten(input: &DeriveInput) -> TokenStream {
     let (flattenable_fields, other_fields) = if let Struct(derived) = &input.data {
         if let Named(fs) = &derived.fields {
             fs.named.iter().partition_map(|f| {
-                // eprintln!("FLATTEN type: {:?} | attrs: {:?}", &f.ty, &f.attrs);
                 // Check for fields with the `#[flattenable]` attribute
                 if f.attrs.len() == 1
                     && Into::<&Ident>::into(f.attrs.first().unwrap().path().get_ident().unwrap())
